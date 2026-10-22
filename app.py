@@ -471,30 +471,45 @@ else:
                         key=f"acp_reply_download_{chat['id']}_{message_index}",
                     )
 
-# Apply a suggestion on rerun using the same message-processing path as chat input.
+
+# Apply suggested prompts and chat input through one processing path.
 prompt = st.chat_input("Message AI Chatbot Pro…", key="acp_chat_input")
-if prompt is None and st.session_state.acp_pending_prompt:
-    prompt = st.session_state.acp_pending_prompt
+
+pending_prompt = st.session_state.get("acp_pending_prompt")
+if pending_prompt:
+    prompt = pending_prompt
     st.session_state.acp_pending_prompt = None
 
 if prompt is not None:
     cleaned_prompt = prompt.strip()
+
     if cleaned_prompt:
         current_chat = active_chat()
         is_first_message = len(current_chat["messages"]) == 0
+
         if is_first_message:
             current_chat["title"] = make_title(cleaned_prompt)
+
         add_message(current_chat, "user", cleaned_prompt)
+
         with st.spinner("Preparing demo response…"):
             response = generate_demo_response(
                 cleaned_prompt,
-                st.session_state.acp_settings.get("response_style", "Balanced"),
+                st.session_state.acp_settings.get(
+                    "response_style", "Balanced"
+                ),
             )
+
         add_message(current_chat, "assistant", response)
         current_chat["updated_at"] = now_iso()
+
         st.rerun()
 
 st.markdown(
-    '<div style="text-align:center;color:#7f8a9c;font-size:.75rem;margin-top:.9rem">AI Chatbot Pro · Foundation build · Don’t rely on demo replies for factual decisions</div>',
+    '<div style="text-align:center;color:#7f8a9c;'
+    'font-size:.75rem;margin-top:.9rem">'
+    'AI Chatbot Pro · Foundation build · '
+    'Don’t rely on demo replies for factual decisions'
+    '</div>',
     unsafe_allow_html=True,
 )
