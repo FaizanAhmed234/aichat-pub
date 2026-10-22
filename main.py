@@ -199,7 +199,7 @@ def generate_gemini_response(chat_messages: list[dict[str, Any]], style: str = "
             config["system_instruction"] = "Provide thorough, well-explained, and detailed answers with comprehensive examples."
 
         chat_session = client.chats.create(
-            model="gemini-3.8-flash",
+            model="gemini-3.6-flash",
             history=history,
             config=config if config else None
         )
