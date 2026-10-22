@@ -449,11 +449,11 @@ if not chat["messages"]:
 else:
     for message_index, message in enumerate(chat["messages"]):
         
-role = message.get("role", "assistant")
-content = str(message.get("content", ""))
-avatar = "🧑‍💻" if role == "user" else "✨"
+        role = message.get("role", "assistant")
+        content = str(message.get("content", ""))
+        avatar = "🧑‍💻" if role == "user" else "✨"
 
-with st.chat_message(role, avatar=avatar):
+        with st.chat_message(role, avatar=avatar):
 
             st.markdown(content)
             if st.session_state.acp_settings.get("show_timestamps"):
